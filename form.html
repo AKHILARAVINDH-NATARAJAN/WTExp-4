@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travel Reservation Form</title>
+<style>
+  body {
+    font-family: Arial;
+    background-color: #72968c;
+  }
+  
+  h1 {
+    text-align: center;
+  }
+  
+  form {
+    max-width: 500px;
+    margin: 0 auto ;
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  label {
+    font-weight: bold;
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  input[type="checkbox"],
+  input[type="radio"] {
+    margin-right: 5px;
+  }
+  
+  input[type="button"] {
+    background-color: #4CAF50;
+    color: rgb(255, 255, 255);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  input[type="button"]:hover {
+    background-color: #a2f3a6;
+  }
+
+  #reservationDetails {
+    display: none;
+    background: #fff;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+</style>
+<script>
+  function validateForm() {
+    var name = document.forms["reservationForm"]["name"].value;
+    var email = document.forms["reservationForm"]["email"].value;
+    var arrivalDate = document.forms["reservationForm"]["arrivalDate"].value;
+    var numOfPersons = document.forms["reservationForm"]["numOfPersons"].value;
+    var agreeTerms = document.forms["reservationForm"]["agreeTerms"].checked;
+    
+    if (name == "" || email == "" || arrivalDate == "" || numOfPersons == "" ) {
+      alert("All fields are required and terms must be agreed to.");
+      return false;
+    }
+
+    var boardingChecked = document.forms["reservationForm"]["boarding"].checked;
+    var foodingChecked = document.forms["reservationForm"]["fooding"].checked;
+    var sightSeeingChecked = document.forms["reservationForm"]["sightSeeing"].checked;
+    if (!boardingChecked && !foodingChecked && !sightSeeingChecked) {
+      alert("Please select at least one option for what you want to avail.");
+      return false;
+    }
+
+    var transportationChecked = false;
+    var transportationRadios = document.getElementsByName("transportation");
+    for (var i = 0; i < transportationRadios.length; i++) {
+      if (transportationRadios[i].checked) {
+        transportationChecked = true;
+        break;
+      }
+    }
+    if (!transportationChecked) {
+      alert("Please select a mode of transportation.");
+      return false;
+    }
+    return true;
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const formInputs = document.querySelectorAll('input[type="text"], input[type="email"], select');
+    
+    formInputs.forEach((input, index) => {
+      input.addEventListener('focus', function () {
+          var prevInput = formInputs[index - 1];
+          if (prevInput && prevInput.value.trim() === '') {
+              var fieldName = prevInput.getAttribute('name');
+              alert("Please fill out the " + fieldName + " field first");
+              prevInput.focus();
+          }
+      });
+    });
+  });
+
+  function showReservationDetails() {
+    var name = document.forms["reservationForm"]["name"].value;
+    var email = document.forms["reservationForm"]["email"].value;
+    var tourPackage = document.forms["reservationForm"]["tourPackage"].value;
+    var arrivalDate = document.forms["reservationForm"]["arrivalDate"].value;
+    var numOfPersons = document.forms["reservationForm"]["numOfPersons"].value;
+    var boardingChecked = document.forms["reservationForm"]["boarding"].checked;
+    var foodingChecked = document.forms["reservationForm"]["fooding"].checked;
+    var sightSeeingChecked = document.forms["reservationForm"]["sightSeeing"].checked;
+    var transportation = document.querySelector('input[name="transportation"]:checked').value;
+    var couponCode = document.forms["reservationForm"]["couponCode"].value;
+
+    var reservationDetails = document.getElementById("reservationDetails");
+    reservationDetails.innerHTML = "<h2>Reservation Details</h2>" +
+                                    "<p><strong>Name:</strong> " + name + "</p>" +
+                                    "<p><strong>Email:</strong> " + email + "</p>" +
+                                    "<p><strong>Tour Package:</strong> " + tourPackage + "</p>" +
+                                    "<p><strong>Arrival Date:</strong> " + arrivalDate + "</p>" +
+                                    "<p><strong>Number of Persons:</strong> " + numOfPersons + "</p>" +
+                                    "<p><strong>Services Availed:</strong> " + (boardingChecked ? "Boarding, " : "") + 
+                                                                      (foodingChecked ? "Fooding, " : "") + 
+                                                                      (sightSeeingChecked ? "Sightseeing" : "") + "</p>" +
+                                    "<p><strong>Mode of Transportation:</strong> " + transportation + "</p>" +
+                                    "<p><strong>Discount Coupon Code:</strong> " + couponCode + "</p>";
+    reservationDetails.style.display = "block";
+  }
+</script>
+</head>
+<body>
+  <h1>Travel Reservation Form</h1>
+  <form name="reservationForm" onsubmit="return validateForm()">
+    <label>Name:</label><br>
+    <input type="text" name="name"><br>
+    <label>Email:</label><br>
+    <input type="email" name="email"><br>
+    <label>Select Tour Package:</label><br>
+    <select name="tourPackage">
+      <option value="">Select Tour Package</option>
+      <option value="GOA">GOA</option>
+      <option value="KERALA">KERALA</option>
+      <option value="SRI LANKA">SRI LANKA</option>
+      <option value="MANALI">MANALI</option>
+      <option value="LADAK">LADAK</option>
+    </select><br>
+    <label>Arrival date:</label><br>
+    <input type="date" name="arrivalDate"><br>
+    <label>Number of persons:</label><br>
+    <input type="text" name="numOfPersons"><br>
+    <label>What would you want to avail?</label><br>
+    <input type="checkbox" name="boarding">Boarding<br>
+    <input type="checkbox" name="fooding">Fooding<br>
+    <input type="checkbox" name="sightSeeing">Sight seeing<br><br>
+    <label>Mode of Transportation:</label><br>
+    <input type="radio" name="transportation" value="Flight">Flight<br>
+    <input type="radio" name="transportation" value="Train">Train<br>
+    <input type="radio" name="transportation" value="Bus">Bus<br><br>
+    <label>Discount Coupon code:</label><br>
+    <input type="text" name="couponCode"><br> 
+    <label>Terms and conditions</label><br>
+    <input type="checkbox" name="agreeTerms" value="agree">I agree<br><br>
+     
+    <center><input type="button" value="Complete Reservation" onclick="showReservationDetails()"></center>
+  </form>
+
+  <div id="reservationDetails"></div>
+</body>
+</html>
